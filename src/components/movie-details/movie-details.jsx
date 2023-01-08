@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
+import { EditIcon } from "../assets/edit-icon";
 import "./movie-details.css";
 
-const MovieDetails = (props) => {
+const MovieDetails = ({
+  movie,
+  editMovie
+}) => {
   return (
     <div className="movie-details">
       <div
@@ -11,27 +15,14 @@ const MovieDetails = (props) => {
           justifyContent: "space-between",
         }}
       >
-        <p className="id">Id: {props.movie.id}</p>
+        <p className="id">Id: {movie.id}</p>
         <button
           className="edit-btn"
           onClick={() => {
-            props.editMovie();
+            editMovie();
           }}
         >
-          <svg
-            width="19"
-            height="19"
-            viewBox="0 0 19 19"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M5 13.5858V9.17157L13.5858 0.585786C14.3668 -0.195262 15.6332 -0.195262 16.4142 0.585786L18 2.17157C18.781 2.95262 18.781 4.21895 18 5L9.41421 13.5858H5ZM14 15.5858V12.5858L16 10.5858V12.5858V15.5858C16 17.2426 14.6569 18.5858 13 18.5858H3C1.34315 18.5858 0 17.2426 0 15.5858V5.58579C0 3.92893 1.34315 2.58579 3 2.58579H6H8L6 4.58579H3C2.44772 4.58579 2 5.0335 2 5.58579V15.5858C2 16.1381 2.44772 16.5858 3 16.5858H13C13.5523 16.5858 14 16.1381 14 15.5858ZM15 2L16.5858 3.58579L8.58579 11.5858H7V10L15 2Z"
-              fill="#333333"
-            />
-          </svg>
+          <EditIcon/>
           <p className="edit-text">Редактировать</p>
         </button>
       </div>
@@ -44,37 +35,37 @@ const MovieDetails = (props) => {
       >
         <img
           className="image"
-          src={props.movie.posterUrl}
+          src={movie.posterUrl}
           alt="img of film"
         ></img>
         <div className="info">
-          <p className="title-of-film">{props.movie.title}</p>
+          <p className="title-of-film">{movie.title}</p>
           <p className="param" style={{ marginTop: 0 }}>
-            {props.movie.director}
+            {movie.director}
           </p>
           <p className="title-param">Параметры</p>
-          <div className="container-param">
-            <p className="param">Год производства</p>
-            <p className="param-value">{props.movie.year}</p>
-          </div>
-          <div className="container-param">
-            <p className="param">Длительность </p>
-            <p className="param-value">{props.movie.runtime} мин.</p>
-          </div>
-          <div className="container-param">
-            <p className="param">Жанры </p>
-            <p className="param-value">{props.movie.genres.join(", ")}</p>
-          </div>
-          <div className="container-param">
-            <p className="param">В главных ролях </p>
-            <p className="param-value">{props.movie.actors}</p>
-          </div>
+          <PropsOfFilm nameParam='Год производства' value = {movie.year}/>
+          <PropsOfFilm nameParam='Длительность' value = {movie.runtime + 'мин.'}/>
+          <PropsOfFilm nameParam='Жанры' value = {movie.genres.join(", ")}/>
+          <PropsOfFilm nameParam='В главных ролях' value = {movie.actors}/>
         </div>
       </div>
       <p>Описание</p>
-      <p>{props.movie.plot}</p>
+      <p>{movie.plot}</p>
     </div>
   );
 };
 
 export default MovieDetails;
+
+const PropsOfFilm = ({
+  nameParam,
+  value
+}) => {
+  return (
+    <div className="container-param">
+      <p className="param">{nameParam}</p>
+      <p className="param-value">{value}</p>
+    </div>
+  );
+}

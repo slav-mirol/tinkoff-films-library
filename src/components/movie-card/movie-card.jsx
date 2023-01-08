@@ -1,18 +1,21 @@
 import React from "react";
 import "./movie-card.css";
 
-const MovieCard = (props) => {
+const MovieCard = ({
+  movie,
+  showMovie
+}) => {
   return (
     <button
       className="movie-card"
       onClick={() => {
-        props.showMovie(Number(props.movie.id));
+        showMovie(Number(movie.id));
       }}
     >
-      <p className="movie-title">{props.movie.title}</p>
+      <p className="movie-title">{movie.title}</p>
       <div style={{ marginTop: 6, justifyContent: "start" }}>
         <p className="movie-props">
-          {props.movie.year} | {props.movie.genres.join(", ")}
+          {movie.year} | {movie.genres.join(", ")}
         </p>
       </div>
     </button>

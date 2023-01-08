@@ -1,10 +1,29 @@
-import React, { useState } from "react";
+import React from "react";
 import MovieCard from "../movie-card/movie-card";
 import "./movie-list.css";
 
-const MovieList = (props) => {
-  function showMovie(number) {
-    props.showMovie(number);
+const MovieList = ({
+  allFilms,
+  showMovie,
+  callAddMovie,
+  movies,
+  setMovies,
+  isEditMovie}) => {
+    
+  function filterFilms(e) {
+    if (e.target.value !== "") {
+      let c = [];
+      for (let i = 0; i < allFilms.length; ++i) {
+        if (
+          allFilms[i].title
+            .toLowerCase()
+            .includes(e.target.value.toLowerCase())
+        ) {
+          c.push(allFilms[i]);
+        }
+      }
+      setMovies(c);
+    } else setMovies(allFilms);
   }
 
   return (
@@ -14,26 +33,12 @@ const MovieList = (props) => {
           className="input-search"
           id="input-search"
           placeholder="Введите название фильма"
-          onChange={(e) => {
-            if (e.target.value !== "") {
-              let c = [];
-              for (let i = 0; i < props.allFilms.length; ++i) {
-                if (
-                  props.allFilms[i].title
-                    .toLowerCase()
-                    .includes(e.target.value.toLowerCase())
-                ) {
-                  c.push(props.allFilms[i]);
-                }
-              }
-              props.setMovies(c);
-            } else props.setMovies(props.allFilms);
-          }}
+          onChange={filterFilms}
         />
       </div>
-      {props.movies.length < 1 ? (
-        <></>
-      ) : props.movies.length > 12 ? (
+      {movies.length < 1 ? (
+        null
+      ) : movies.length > 12 ? (
         <div
           style={{
             display: "flex",
@@ -42,16 +47,20 @@ const MovieList = (props) => {
             overflowY: "scroll",
           }}
         >
-          {props.movies.map((elem, i) => (
-            <MovieCard key={i} movie={elem} showMovie={showMovie} />
+          {movies.map((elem) => (
+            <MovieCard key={elem.id} movie={elem} showMovie={showMovie} />
           ))}
         </div>
       ) : (
         <div
-          style={{ display: "flex", flexDirection: "column", maxHeight: 600 }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            maxHeight: 600
+          }}
         >
-          {props.movies.map((elem, i) => (
-            <MovieCard key={i} movie={elem} showMovie={showMovie} />
+          {movies.map((elem) => (
+            <MovieCard key={elem.id} movie={elem} showMovie={showMovie} />
           ))}
         </div>
       )}
@@ -64,14 +73,12 @@ const MovieList = (props) => {
         }}
       >
         <div className="found" style={{ marginLeft: 15 }}>
-          <p className="found-text">Найдено {props.movies.length} фильмов</p>
+          <p className="found-text">Найдено {movies.length} фильмов</p>
         </div>
         <button
           className="btn-add"
-          disabled={props.isEditMovie}
-          onClick={() => {
-            props.callAddMovie();
-          }}
+          disabled={isEditMovie}
+          onClick={callAddMovie}
         >
           <p className="btn-add-text">Добавить фильм</p>
         </button>
