@@ -38,27 +38,8 @@ const MovieList = ({
       </div>
       {movies.length < 1 ? (
         null
-      ) : movies.length > 12 ? (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            maxHeight: 600,
-            overflowY: "scroll",
-          }}
-        >
-          {movies.map((elem) => (
-            <MovieCard key={elem.id} movie={elem} showMovie={showMovie} />
-          ))}
-        </div>
       ) : (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            maxHeight: 600
-          }}
-        >
+        <div className="movies">
           {movies.map((elem) => (
             <MovieCard key={elem.id} movie={elem} showMovie={showMovie} />
           ))}
