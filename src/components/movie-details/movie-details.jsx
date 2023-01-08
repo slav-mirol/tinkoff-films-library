@@ -19,7 +19,6 @@ const MovieDetails = ({
         <button
           className="edit-btn"
           onClick={() => {
-            console.log('click1');
             callEditMovie();
           }}
         >

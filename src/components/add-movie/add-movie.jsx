@@ -183,7 +183,7 @@ const AddMovie = ({
             <p
               className="text-search"
               onClick={() => {
-                showMovie(movie.id);
+                setStateMovie(null);
               }}
             >
               Отменить

@@ -15,22 +15,19 @@ function fetchAll() {
 const App = () => {
 
   
-
-  const [allFilms, setAllFilms] = useState([]);
   const [movies, setMovies] = useState([]);
   const [stateMovie, setStateMovie] = useState(null);
   const [curMovie, setCurMovie] = useState(undefined);
 
   useEffect(() => {
     fetchAll().then((res)=> {
-      setAllFilms(res);
       setMovies(res);
     })
   }, []);
-  const showMovie = useCallback((number) => {
-    setCurMovie(allFilms[number - 1]);
+  const onSetCurrentMovie = useCallback((film) => {
+    setCurMovie(film);
     setStateMovie(null);
-  }, [allFilms])
+  }, [])
 
   const callAddMovie = useCallback(() => {
     setStateMovie('ADD');
@@ -51,7 +48,6 @@ const App = () => {
       });
 
       await fetchAll().then((res)=> {
-        setAllFilms(res);
         setMovies(res);
       });
       setStateMovie(null);
@@ -73,7 +69,6 @@ const App = () => {
       })
 
       await fetchAll().then((res)=> {
-        setAllFilms(res);
         setMovies(res);
       });
       setCurMovie(data);
@@ -89,8 +84,7 @@ const App = () => {
       <Header />
       <div className="main-content">
         <MovieList
-          allFilms={allFilms}
-          showMovie={showMovie}
+          showMovie={onSetCurrentMovie}
           callAddMovie={callAddMovie}
           movies={movies}
           setMovies={setMovies}
@@ -108,7 +102,7 @@ const App = () => {
             movie={curMovie}
             stateMovie={stateMovie}
             editMovie={editMovie}
-            showMovie={showMovie}
+            showMovie={onSetCurrentMovie}
             setCurMovie={setCurMovie}
           />
         )}

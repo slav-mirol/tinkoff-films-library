@@ -9,7 +9,7 @@ const MovieCard = ({
     <button
       className="movie-card"
       onClick={() => {
-        showMovie(Number(movie.id));
+        showMovie(movie);
       }}
     >
       <p className="movie-title">{movie.title}</p>

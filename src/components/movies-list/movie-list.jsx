@@ -1,31 +1,27 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import MovieCard from "../movie-card/movie-card";
 import "./movie-list.css";
+import useDebounce from "./useDebounce";
+
+function fetchFilms(value) {
+  return fetch(`http://localhost:3300/movies?title_like=${value}`)
+    .then((res) => res.json())
+    .catch(() => alert("Error in fetch!"));
+}
 
 const MovieList = ({
-  allFilms,
   showMovie,
   callAddMovie,
   movies,
   setMovies,
   stateMovie
   }) => {
-    
-  function filterFilms(e) {
-    if (e.target.value !== "") {
-      let c = [];
-      for (let i = 0; i < allFilms.length; ++i) {
-        if (
-          allFilms[i].title
-            .toLowerCase()
-            .includes(e.target.value.toLowerCase())
-        ) {
-          c.push(allFilms[i]);
-        }
-      }
-      setMovies(c);
-    } else setMovies(allFilms);
-  }
+
+    const [value,setValue] = useState('');  
+    const {debounceValue} = useDebounce(value,500)
+  useEffect(()=>{
+    fetchFilms(value).then((res)=>setMovies(res));
+  },[debounceValue]);
 
   return (
     <div className="movies-list">
@@ -34,7 +30,7 @@ const MovieList = ({
           className="input-search"
           id="input-search"
           placeholder="Введите название фильма"
-          onChange={filterFilms}
+          onChange={(e) => setValue(e.target.value)}
         />
       </div>
       <div className="movies">
