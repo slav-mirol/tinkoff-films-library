@@ -36,16 +36,16 @@ const MovieList = ({
           onChange={filterFilms}
         />
       </div>
-      {movies.length < 1 ? (
-        null
-      ) : (
-        <div className="movies">
-          {movies.map((elem) => (
+      <div className="movies">
+        {movies.length ?
+          movies.map((elem) => (
             <MovieCard key={elem.id} movie={elem} showMovie={showMovie} />
-          ))}
-        </div>
-      )}
-      <div className="line" />
+          ))
+        :
+          null
+        }
+      </div>
+      <div className="line"/>
       <div
         style={{
           display: "flex",

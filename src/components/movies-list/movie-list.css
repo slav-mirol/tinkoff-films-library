@@ -4,7 +4,6 @@
   flex-direction: column;
   width: 350px;
   border-right: 1px solid rgba(217, 217, 217, 0.52);
-  max-height: 650px;
 }
 
 .search {
@@ -76,11 +75,10 @@
   letter-spacing: 0em;
 }
 
-
 .movies {
   display: flex;
   flex-direction: column;
-  height: 80vh;
+  height: calc(100vh - 200px);
   overflow-y: auto;
   overflow-x: hidden;
 }
