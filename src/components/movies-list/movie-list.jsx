@@ -8,7 +8,8 @@ const MovieList = ({
   callAddMovie,
   movies,
   setMovies,
-  isEditMovie}) => {
+  stateMovie
+  }) => {
     
   function filterFilms(e) {
     if (e.target.value !== "") {
@@ -58,7 +59,7 @@ const MovieList = ({
         </div>
         <button
           className="btn-add"
-          disabled={isEditMovie}
+          disabled={stateMovie==='EDIT' ? true : false}
           onClick={callAddMovie}
         >
           <p className="btn-add-text">Добавить фильм</p>

@@ -1,9 +1,17 @@
 import React, { useState } from "react";
 import "./add-movie.css";
 
-const AddMovie = (props) => {
+const AddMovie = ({
+  addMovie = null,
+  setStateMovie= null,
+  movie=null,
+  stateMovie=null,
+  editMovie=null,
+  showMovie=null,
+  setCurMovie = null,
+}) => {
   const [formState, setFormState] = useState({});
-  if (props.movie === undefined) {
+  if (stateMovie === 'ADD') {
     return (
       <div className="form" id="add-form">
         <p className="title">Создание фильма</p>
@@ -85,7 +93,7 @@ const AddMovie = (props) => {
             <p
               className="text-search"
               onClick={() => {
-                props.setIsAddMovie(false);
+                setStateMovie(null);
               }}
             >
               Отменить
@@ -95,7 +103,7 @@ const AddMovie = (props) => {
             <p
               className="btn-add-text"
               onClick={() => {
-                props.addMovie(formState);
+                addMovie(formState);
               }}
             >
               Сохранить
@@ -104,7 +112,7 @@ const AddMovie = (props) => {
         </div>
       </div>
     );
-  } else {
+  } else if (stateMovie === 'EDIT'){
     return (
       <div className="form" id="edit-form">
         <p className="title">Редактирование фильма</p>
@@ -112,55 +120,55 @@ const AddMovie = (props) => {
           <PropsOfFilm
             titleParam='Название фильма'
             inpPlaceholder="Введите название фильма"
-            inpValue={props.movie.title}
+            inpValue={movie.title}
             parametr='title'
-            formState={props.setEditMovie}
+            setFormState={setCurMovie}
           />
           <PropsOfFilm
             titleParam='Год выпуска'
             inpPlaceholder="Введите год выпуска"
-            inpValue={props.movie.year}
+            inpValue={movie.year}
             parametr='year'
-            setFormState={props.setEditMovie}
+            setFormState={setCurMovie}
           />
           <PropsOfFilm
             titleParam='Длительность'
             inpPlaceholder="Введите длительность"
-            inpValue={props.movie.runtime}
+            inpValue={movie.runtime}
             parametr='runtime'
-            setFormState={props.setEditMovie}
+            setFormState={setCurMovie}
           />
           <div className="params">
             <p className="title-param">Описание</p>
             <textarea
               className="inp-param"
               placeholder="Введите..."
-              value={props.movie.plot}
+              value={movie.plot}
               onChange={(e) => {
-                props.setEditMovie((prevState) => ({...prevState, plot: e.target.value}));
+                setCurMovie((prevState) => ({...prevState, plot: e.target.value}));
               }}
             />
           </div>
           <PropsOfFilm
             titleParam='Укажите ссылку на обложку'
             inpPlaceholder="Введите..."
-            inpValue={props.movie.posterUrl}
+            inpValue={movie.posterUrl}
             parametr='posterUrl'
-            setFormState={props.setEditMovie}
+            setFormState={setCurMovie}
           />
           <PropsOfFilm
             titleParam='Укажите список актеров'
             inpPlaceholder="Введите актеров (через ,)"
-            inpValue={props.movie.actors}
+            inpValue={movie.actors}
             parametr='actors'
-            setFormState={props.setEditMovie}
+            setFormState={setCurMovie}
           />
           <PropsOfFilm
             titleParam='Режиссер'
             inpPlaceholder="Введите режиссера фильма"
-            inpValue={props.movie.director}
+            inpValue={movie.director}
             parametr='director'
-            setFormState={props.setEditMovie}
+            setFormState={setCurMovie}
           />
         </div>
         <div className="line" />
@@ -175,7 +183,7 @@ const AddMovie = (props) => {
             <p
               className="text-search"
               onClick={() => {
-                props.showMovie(props.movie.id);
+                showMovie(movie.id);
               }}
             >
               Отменить
@@ -185,7 +193,7 @@ const AddMovie = (props) => {
             <p
               className="btn-add-text"
               onClick={() => {
-                props.editMovie(props.movie.id);
+                editMovie(movie.id);
               }}
             >
               Сохранить

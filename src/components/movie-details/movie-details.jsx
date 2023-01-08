@@ -4,7 +4,7 @@ import "./movie-details.css";
 
 const MovieDetails = ({
   movie,
-  editMovie
+  callEditMovie
 }) => {
   return (
     <div className="movie-details">
@@ -19,7 +19,8 @@ const MovieDetails = ({
         <button
           className="edit-btn"
           onClick={() => {
-            editMovie();
+            console.log('click1');
+            callEditMovie();
           }}
         >
           <EditIcon/>

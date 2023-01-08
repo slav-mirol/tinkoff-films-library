@@ -5,83 +5,83 @@ import MovieDetails from "./components/movie-details/movie-details";
 import MovieList from "./components/movies-list/movie-list";
 import AddMovie from "./components/add-movie/add-movie";
 
+function fetchAll() {
+  return fetch("http://localhost:3300/movies")
+    .then((res) => res.json())
+    .catch(() => alert("Error in fetch!"));
+}
+
+
 const App = () => {
 
-  function fetchAll() {
-    fetch("http://localhost:3300/movies")
-      .then((res) => res.json())
-      .then((data) => {
-        setMovies(data);
-        setAllFilms(data)
-      })
-      .catch(() => alert("Error in fetch!"));
-  }
-
-  useEffect(() => {
-    fetchAll()
-  }, []);
+  
 
   const [allFilms, setAllFilms] = useState([]);
   const [movies, setMovies] = useState([]);
-  const [chooseMovie, setChooseMovie] = useState(false);
-  const [isAddMovie, setIsAddMovie] = useState(false);
-  const [isEditMovie, setIsEditMovie] = useState(false);
-  const [curMovie, setCurMovie] = useState({});
-  const [editedMovie, setEditMovie] = useState({});
+  const [stateMovie, setStateMovie] = useState(null);
+  const [curMovie, setCurMovie] = useState(undefined);
 
+  useEffect(() => {
+    fetchAll().then((res)=> {
+      setAllFilms(res);
+      setMovies(res);
+    })
+  }, []);
   const showMovie = useCallback((number) => {
-    setIsAddMovie(false);
-    setIsEditMovie(false);
     setCurMovie(allFilms[number - 1]);
-    setChooseMovie(true);
+    setStateMovie(null);
   }, [allFilms])
 
-  const callAddMovie = useCallback( () => {
-    setChooseMovie(false);
-    setIsEditMovie(false);
-    setIsAddMovie(true);
+  const callAddMovie = useCallback(() => {
+    setStateMovie('ADD');
   }, [])
 
   const callEditMovie = useCallback( ()=> {
-    setChooseMovie(false);
-    setIsAddMovie(false);
-    setIsEditMovie(true);
-    setEditMovie(curMovie);
-  }, [curMovie])
+    setStateMovie('EDIT');
+  }, [])
 
   async function editMovie(num) {
-    await fetch(`http://localhost:3300/movies/${num}`, {
-      method: "PATCH",
-      body: JSON.stringify(editedMovie),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then(() => fetchAll())
-      .then(() => {
-        setIsEditMovie(false)
-        setCurMovie(editedMovie)
-        setChooseMovie(true)
-      })
-      .catch(() => alert("Error in fetch!"));
+    try {
+      await fetch(`http://localhost:3300/movies/${num}`, {
+        method: "PATCH",
+        body: JSON.stringify(curMovie),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+
+      await fetchAll().then((res)=> {
+        setAllFilms(res);
+        setMovies(res);
+      });
+      setStateMovie(null);
+    } catch (e) {
+      alert("Error in fetch!");
+      console.error(e);
+    }
   }
 
   async function addMovie(film) {
     const data = { id: movies.length + 1, ...film };
-    await fetch("http://localhost:3300/movies", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then(() => fetchAll())
-      .then(() => {
-        setIsAddMovie(false)
-        setCurMovie(data)
-        setChooseMovie(true)
+    try {
+      await fetch("http://localhost:3300/movies", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
       })
-      .catch(() => alert("Error in fetch!"));
+
+      await fetchAll().then((res)=> {
+        setAllFilms(res);
+        setMovies(res);
+      });
+      setCurMovie(data);
+      setStateMovie(null);
+    } catch (e) {
+      alert("Error in fetch!");
+      console.error(e);
+    }
   }
 
   return (
@@ -94,28 +94,23 @@ const App = () => {
           callAddMovie={callAddMovie}
           movies={movies}
           setMovies={setMovies}
-          isEditMovie={isEditMovie}
+          stateMovie={stateMovie}
         />
-        {chooseMovie ? (
+        {curMovie && !stateMovie ? (
           <MovieDetails
             movie={curMovie}
-            setChooseMovie={setChooseMovie}
-            editMovie={callEditMovie}
-          />
-        ) : isAddMovie ? (
-          <AddMovie
-            addMovie={addMovie}
-            setIsAddMovie={setIsAddMovie}
-          />
-        ) : isEditMovie ? (
-          <AddMovie
-            movie={editedMovie}
-            setEditMovie={setEditMovie}
-            editMovie={editMovie}
-            showMovie={showMovie}
+            callEditMovie={callEditMovie}
           />
         ) : (
-          null
+          <AddMovie
+            addMovie={addMovie}
+            setStateMovie={setStateMovie}
+            movie={curMovie}
+            stateMovie={stateMovie}
+            editMovie={editMovie}
+            showMovie={showMovie}
+            setCurMovie={setCurMovie}
+          />
         )}
       </div>
     </div>
